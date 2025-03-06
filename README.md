@@ -1,12 +1,18 @@
 APUNTES DEL LIBRO
 This repository contains the source code that comes from the book: Hacking The Art of Exploitation: https://github.com/intere/hacking
+# Indice
+
+1. [0x250 Programa basico en C] (#0x250-Programa-basico-en-C)
+2. [0x251 Descompilacion] (#0x251-Descompilacion)
+3. [0x252 Debugeador] (#0x252-Debugeador)
+4. [0x253 Lenguaje Ensamblador] (#0x253-Lenguaje-Ensamblador)
 
 # 0x250 Programa basico en C
 Es un programa en explicativo de la logica de este lenguaje:
 - El programa empieza en la funcion main() 
 - La primera linea #incluse <stdio.h> incluye una libreria basica en C para el estandar input/ouput (I/O), esto se añade al programa al compilarlo y esta situado en /usr/incluse/stdio.h Esta libreria define funciones basicas de C como main() o printf()
--Se compila hasi $ gcc 0x250.c -o 0x250.out 
--Se ejecuta hasi
+- Se compila hasi $ gcc 0x250.c -o 0x250.out 
+- Se ejecuta hasi
 └─$ ./0x250    
 Hello, world!
 Hello, world!
