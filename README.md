@@ -2,12 +2,12 @@ APUNTES DEL LIBRO
 This repository contains the source code that comes from the book: Hacking The Art of Exploitation: https://github.com/intere/hacking
 # Indice
 
-1. [250 Programa básico en C](#250-programa-básico-en-c)
-2. [251 Descompilación](#251-descompilación)
-3. [252 Depurador](#252-depurador)
-4. [253 Lenguaje Ensamblador](#253-lenguaje-ensamblador)
+1. [Programa básico en C](#programa-basico-en-c)
+2. [Descompilación](#descompilacion)
+3. [Depurador](#depurador)
+4. [Lenguaje Ensamblador](#lenguaje-ensamblador)
 
-# 250 Programa basico en C
+# Programa basico en C
 Es un programa en explicativo de la logica de este lenguaje:
 - El programa empieza en la funcion main() 
 - La primera linea #incluse <stdio.h> incluye una libreria basica en C para el estandar input/ouput (I/O), esto se añade al programa al compilarlo y esta situado en /usr/incluse/stdio.h Esta libreria define funciones basicas de C como main() o printf()
@@ -25,7 +25,7 @@ Hello, world!
 Hello, world!
 Hello, world
 
-# 251 Descompilacion 
+# Descompilacion 
 El programa al compilarlo, se combierte en lenguaje maquina, depende de que arquitectura de procesador tengamos se traducira en ese tipo de lenguaje maquina.
 En este caso podemos ver con el promgrama objdump el contenido de la funcion main en lenguaje maquina:
 
@@ -104,7 +104,7 @@ Esta sintaxis en mas facil de entender.
 
 Aqui podemos ver registros, que son partes de memoria de CPU mucha mas rapidos que RAM como rbp, rsp... son la base de esto.
 
-# 252 Debugeador
+# Depurador
 
 Tenemos un preocesador x86. El procesador x86 tiene muchos registros que son como variables internas del procesador. 
 Con el debugeador GDB podemos ejecutar paso a paso programas compilados, examinar la mamoria del programa y y ver los registradores del procesador.
@@ -168,7 +168,7 @@ Estos son los registros encontrados.
 
 El puntero mas importante es la instruccion RIP (instruction pointer), almacena la direccion de la procima instruccion a ejecutar, en este caso main.
 
-# 253 Lenguaje Ensamblador
+# Lenguaje Ensamblador
 
 Vamos a configurar GDB para que utilice la sintaxix Intel:
 
