@@ -2,10 +2,10 @@ APUNTES DEL LIBRO
 This repository contains the source code that comes from the book: Hacking The Art of Exploitation: https://github.com/intere/hacking
 # Indice
 
-1. [0x250 Programa basico en C] (#0x250-programa-basico-en-c)
-2. [0x251 Descompilacion] (#0x251-descompilacion)
-3. [0x252 Debugeador] (#0x252-debugeador)
-4. [0x253 Lenguaje Ensamblador] (#0x253-lenguaje-ensamblador)
+1. [0x250 Programa básico en C](#0x250-programa-básico-en-c)
+2. [0x251 Descompilación](#0x251-descompilación)
+3. [0x252 Depurador](#0x252-depurador)
+4. [0x253 Lenguaje Ensamblador](#0x253-lenguaje-ensamblador)
 
 # 0x250 Programa basico en C
 Es un programa en explicativo de la logica de este lenguaje:
