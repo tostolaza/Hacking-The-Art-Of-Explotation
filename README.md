@@ -13,6 +13,7 @@ Es un programa en explicativo de la logica de este lenguaje:
 - La primera linea #incluse <stdio.h> incluye una libreria basica en C para el estandar input/ouput (I/O), esto se añade al programa al compilarlo y esta situado en /usr/incluse/stdio.h Esta libreria define funciones basicas de C como main() o printf()
 - Se compila hasi $ gcc 0x250.c -o 0x250.out 
 - Se ejecuta hasi
+```
 └─$ ./0x250    
 Hello, world!
 Hello, world!
@@ -24,11 +25,12 @@ Hello, world!
 Hello, world!
 Hello, world!
 Hello, world
-
+```
 # Descompilacion 
 El programa al compilarlo, se combierte en lenguaje maquina, depende de que arquitectura de procesador tengamos se traducira en ese tipo de lenguaje maquina.
 En este caso podemos ver con el promgrama objdump el contenido de la funcion main en lenguaje maquina:
 
+```
 └─$ objdump -D 0x250 | grep -A20 main.:
 0000000000001139 <main>:
     1139:       55                      push   %rbp
@@ -51,7 +53,7 @@ Disassembly of section .fini:
 000000000000116c <_fini>:
     116c:       48 83 ec 08             sub    $0x8,%rsp
     1170:       48 83 c4 08             add    $0x8,%rsp
-
+```
 El programa onjdump expulsa muchas lineas, por eso se hace grep en las 20 lineas que siguen a main para filtrar el contenido que nos interesa.
 
 Este byta esta representado en hexadecimal notation, que utiliza el sistema de  numeracion base-16.
@@ -70,13 +72,15 @@ Los numeros hexadecimales como 0x2349085 en la izquierda on direcciones de memro
 | `0x116c`  | Inicio de `_fini` |
 
 En este caso como el procesador es nuevo, utiliza 64-bits. Se puede saber hasi:
+```
 └─$ file 0x250.out
 
 0x250.out: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7d23cd86c9945fc3561a88f151c85cf4ed6ff47f, for GNU/Linux 3.2.0, not stripped
-
+```
 Ensamblador es simplemetne un lenguaje que pueden enterder los procesadores, hay dos grandes tipo AT&T e Intes syntax. La salida que vemos es sintaxis AT&T, se puede diferenciar por los simbolos % y $ que inician casi todo. 
 
 Pero el mismo codigo se puede visualizar en sintaxis intel hasi:
+```
 └─$ objdump -M intel -D 0x250.out | grep -A20 main.:
 0000000000001139 <main>:
     1139:       55                      push   rbp
@@ -99,7 +103,7 @@ Disassembly of section .fini:
 000000000000116c <_fini>:
     116c:       48 83 ec 08             sub    rsp,0x8
     1170:       48 83 c4 08             add    rsp,0x8
-
+```
 Esta sintaxis en mas facil de entender.
 
 Aqui podemos ver registros, que son partes de memoria de CPU mucha mas rapidos que RAM como rbp, rsp... son la base de esto.
@@ -108,7 +112,7 @@ Aqui podemos ver registros, que son partes de memoria de CPU mucha mas rapidos q
 
 Tenemos un preocesador x86. El procesador x86 tiene muchos registros que son como variables internas del procesador. 
 Con el debugeador GDB podemos ejecutar paso a paso programas compilados, examinar la mamoria del programa y y ver los registradores del procesador.
-
+```
 └─$ gdb -q ./0x250
 Reading symbols from ./0x250...
 (No debugging symbols found in ./0x250)
@@ -148,7 +152,7 @@ gs             0x0                 0
 fs_base        0x7ffff7dad740      140737351702336
 gs_base        0x0                 0
 (gdb) quit
-
+```
 Al poner el breackpoint en main(), la ejecucion se parara justo en el punto marcado. GDB muestra los registros hasta ese punto. 
 
 Estos son los registros encontrados.
@@ -171,18 +175,18 @@ El puntero mas importante es la instruccion RIP (instruction pointer), almacena 
 # Lenguaje Ensamblador
 
 Vamos a configurar GDB para que utilice la sintaxix Intel:
-
+```
  echo "set disassembly intel" > ~/.gdbinit 
-
+```
 Normalmente las intstrucciones aparecen hasi:
-
+```
 Operation   destino     origen
-
+```
 El destino y origen pueden ser un registrador, direccion de memoria o un valor. Los operation son mnemonics: Por ejemplo:
-
+```
 mov ebp,esp
 sub esp,0x8
-
+```
 mov moveria el valor de su origen a su destino y sub sustraeria 8 de esp, viendo el resultado en esp.
 
 Ejemplos de mnemonicos comunes en x86-64
