@@ -212,5 +212,48 @@ A estos se le llama `mnemonics` y los`mnemonics` mas comunes en `x86-64` son:
 | `push` | Guarda un valor en la pila | `push rax` |
 | `pop`  | Extrae un valor de la pila | `pop rax` |
 
+Para poder conseguir mas informacion al debugear, podemos compilar nuestro programa con la flag `-g`.
+
+```$ gcc -g 0x250.c```
 
 
+
+```
+$ gdb -q ./a.out
+Reading symbols from ./a.out...
+(gdb) list
+1       #include <stdio.h>
+2
+3       int main(){
+4               //Bucle hello word 10 veces
+5               int i;
+6               for(i=0; i < 10; i++){
+7                       printf("Hello, world!\n");
+8               }
+9               return 0;
+10      }
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x0000000000001139 <+0>:     push   %rbp
+   0x000000000000113a <+1>:     mov    %rsp,%rbp
+   0x000000000000113d <+4>:     sub    $0x10,%rsp
+   0x0000000000001141 <+8>:     movl   $0x0,-0x4(%rbp)
+   0x0000000000001148 <+15>:    jmp    0x115d <main+36>
+   0x000000000000114a <+17>:    lea    0xeb3(%rip),%rax        # 0x2004
+   0x0000000000001151 <+24>:    mov    %rax,%rdi
+   0x0000000000001154 <+27>:    call   0x1030 <puts@plt>
+   0x0000000000001159 <+32>:    addl   $0x1,-0x4(%rbp)
+   0x000000000000115d <+36>:    cmpl   $0x9,-0x4(%rbp)
+   0x0000000000001161 <+40>:    jle    0x114a <main+17>
+   0x0000000000001163 <+42>:    mov    $0x0,%eax
+   0x0000000000001168 <+47>:    leave
+   0x0000000000001169 <+48>:    ret
+End of assembler dump.
+```
+```
+(gdb) break main
+Breakpoint 1 at 0x1141: file 0x250.c, line 6.
+(gdb) run
+    Breakpoint 1, main () at 0x250.c:6
+6               for(i=0; i < 10; i++){
+```
