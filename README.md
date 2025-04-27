@@ -1,5 +1,9 @@
-APUNTES DEL LIBRO
-This repository contains the source code that comes from the book: Hacking The Art of Exploitation: https://github.com/intere/hacking
+# Apuntes del libro
+
+Este repositorio contiene el código fuente y apuntes derivados del libro: [*Hacking: The Art of Exploitation*](https://github.com/intere/hacking) de Jon Erickson.
+
+*Proyecto en desarrollo
+
 # Indice
 
 1. [Programa básico en C](#programa-basico-en-c)
