@@ -8,11 +8,14 @@ This repository contains the source code that comes from the book: Hacking The A
 4. [Lenguaje Ensamblador](#lenguaje-ensamblador)
 
 # Programa basico en C
-Es un programa en explicativo de la logica de este lenguaje:
-- El programa empieza en la funcion main() 
-- La primera linea #incluse <stdio.h> incluye una libreria basica en C para el estandar input/ouput (I/O), esto se añade al programa al compilarlo y esta situado en /usr/incluse/stdio.h Esta libreria define funciones basicas de C como main() o printf()
-- Se compila hasi $ gcc 0x250.c -o 0x250.out 
-- Se ejecuta hasi
+Es un programa que explica la logica de este lenguaje:
+- El programa empieza en la funcion `main()` 
+- La primera linea `#incluse <stdio.h>` incluye una libreria basica en C para el estandar input/ouput (I/O), esto se añade al programa al compilarlo y esta situado en `/usr/incluse/stdio.h` Esta libreria define funciones basicas de C como `main()` o `printf()`
+- Compilar:
+```
+ $ gcc 0x250.c -o 0x250.out
+``` 
+- Ejecutar:
 ```
 └─$ ./0x250    
 Hello, world!
@@ -27,8 +30,9 @@ Hello, world!
 Hello, world
 ```
 # Descompilacion 
-El programa al compilarlo, se combierte en lenguaje maquina, depende de que arquitectura de procesador tengamos se traducira en ese tipo de lenguaje maquina.
-En este caso podemos ver con el promgrama objdump el contenido de la funcion main en lenguaje maquina:
+Al compilar el programa, se combierte en lenguaje maquina, depende de que arquitectura de procesador tengamos, se traducira en un tipo u otro de lenguaje maquina.
+
+En este caso, podemos el contenido de la funcion `main()` en lenguaje maquina ejecutando el programa `objdump`:
 
 ```
 └─$ objdump -D 0x250 | grep -A20 main.:
@@ -54,11 +58,9 @@ Disassembly of section .fini:
     116c:       48 83 ec 08             sub    $0x8,%rsp
     1170:       48 83 c4 08             add    $0x8,%rsp
 ```
-El programa onjdump expulsa muchas lineas, por eso se hace grep en las 20 lineas que siguen a main para filtrar el contenido que nos interesa.
+El programa `objdump` muestra  muchas lineas, por eso se filtra con `grep` las 20 primeras lineas tras `main`, filtrando hasi el contenido que nos interesa.
 
-Este byta esta representado en hexadecimal notation, que utiliza el sistema de  numeracion base-16.
-
-Los numeros hexadecimales como 0x2349085 en la izquierda on direcciones de memroia, esto es una coleccion de bits que se guarda temporalmente con esta direccion.
+Los numeros hexadecimales como `0x2349085` en la izquierda son direcciones de memoria, esto es una coleccion de bits que se guarda temporalmente con esta direccion.
 
 ## Direcciones encontradas en el binario
 
@@ -71,13 +73,15 @@ Los numeros hexadecimales como 0x2349085 en la izquierda on direcciones de memro
 | `0x1169`  | `ret` de `main` |
 | `0x116c`  | Inicio de `_fini` |
 
-En este caso como el procesador es nuevo, utiliza 64-bits. Se puede saber hasi:
+En este caso, como el procesador es nuevo, utiliza 64-bits. Se puede saber hasi:
 ```
 └─$ file 0x250.out
 
 0x250.out: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7d23cd86c9945fc3561a88f151c85cf4ed6ff47f, for GNU/Linux 3.2.0, not stripped
 ```
-Ensamblador es simplemetne un lenguaje que pueden enterder los procesadores, hay dos grandes tipo AT&T e Intes syntax. La salida que vemos es sintaxis AT&T, se puede diferenciar por los simbolos % y $ que inician casi todo. 
+El lenguaje maquina o ensamblador, es simplemetne un lenguaje que pueden enterder los procesadores. Hay dos grandes tipo: `AT&T` e `Intel syntax`. 
+
+La salida que vemos es sintaxis `AT&T`, se puede diferenciar por los simbolos `%` y `$` que inician casi todo. 
 
 Pero el mismo codigo se puede visualizar en sintaxis intel hasi:
 ```
@@ -106,12 +110,13 @@ Disassembly of section .fini:
 ```
 Esta sintaxis en mas facil de entender.
 
-Aqui podemos ver registros, que son partes de memoria de CPU mucha mas rapidos que RAM como rbp, rsp... son la base de esto.
+Aqui podemos ver registros, que son partes de memoria de CPU mucha mas rapidos que RAM como `rbp`, `rsp`... son la base de esto.
 
 # Depurador
 
-Tenemos un preocesador x86. El procesador x86 tiene muchos registros que son como variables internas del procesador. 
-Con el debugeador GDB podemos ejecutar paso a paso programas compilados, examinar la mamoria del programa y y ver los registradores del procesador.
+Tenemos un preocesador `x86`. El procesador `x86` tiene muchos registros que son como variables internas del procesador.
+ 
+Con el debugeador `GDB` podemos ejecutar paso a paso programas compilados, examinar la mamoria del programa y ver los registradores del procesador.
 ```
 └─$ gdb -q ./0x250
 Reading symbols from ./0x250...
@@ -170,11 +175,11 @@ Estos son los registros encontrados.
 | **`rip`** | `0x55555555513d` | Dirección de la siguiente instrucción a ejecutar (`main+4`). |
 | **`eflags`** | `0x246` | Contiene flags del procesador (`ZF` está activo). |
 
-El puntero mas importante es la instruccion RIP (instruction pointer), almacena la direccion de la procima instruccion a ejecutar, en este caso main.
+El puntero mas importante es la instruccion `RIP` (instruction pointer), almacena la direccion de la proxima instruccion a ejecutar, en este caso `main`.
 
 # Lenguaje Ensamblador
 
-Vamos a configurar GDB para que utilice la sintaxix Intel:
+Vamos a configurar `GDB` para que utilice la sintaxix `Intel`:
 ```
  echo "set disassembly intel" > ~/.gdbinit 
 ```
@@ -182,14 +187,15 @@ Normalmente las intstrucciones aparecen hasi:
 ```
 Operation   destino     origen
 ```
-El destino y origen pueden ser un registrador, direccion de memoria o un valor. Los operation son mnemonics: Por ejemplo:
+El destino y origen pueden ser un registrador, direccion de memoria o un valor. Por ejemplo:
 ```
 mov ebp,esp
 sub esp,0x8
 ```
-mov moveria el valor de su origen a su destino y sub sustraeria 8 de esp, viendo el resultado en esp.
+`mov` moveria el valor de su origen a su destino y `sub` sustraeria 8 de `esp`, viendo el resultado en `esp`.
 
-Ejemplos de mnemonicos comunes en x86-64
+A estos se le llama `mnemonics` y los`mnemonics` mas comunes en `x86-64` son:
+
 | Mnemónico | Significado | Ejemplo |
 |-----------|------------|---------|
 | `mov`  | Mueve datos de un lugar a otro | `mov rax, rbx` |
