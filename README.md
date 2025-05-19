@@ -285,6 +285,8 @@ El comando examinar en GDB puede usarse para examinar una dirección de memoria 
 
 El formato de visualización también utiliza una abreviatura de una sola letra, que opcionalmente puede ir precedida de un recuento de elementos a examinar. Algunas letras de formato comunes son las siguientes:
 
+| Letra | Formato de visualización               |
+|-------|----------------------------------------|
 | o     | Se muestra en octal.                   |
 | x     | Se muestra en hexadecimal.             |
 | u     | Se muestra en decimal sin signo (base 10). |
@@ -304,6 +306,36 @@ rip            0x555555555141      0x555555555141 <main+8>
 (gdb) x/t $rip
 0x555555555141 <main+8>:        00000000111111000100010111000111
 (gdb)
+```
+También se puede anteponer un número al formato del comando examine para examinar varias unidades en la dirección de destino.
+
+```
+(gdb) x/2x $rip
+0x555555555141 <main+8>:        0x00fc45c7      0xeb000000
+(gdb) x/12x $rip
+0x555555555141 <main+8>:        0x00fc45c7      0xeb000000      0x058d4813      0x00000eb3
+0x555555555151 <main+24>:       0xe8c78948      0xfffffed7      0x01fc4583      0x09fc7d83
+0x555555555161 <main+40>:       0x00b8e77e      0xc9000000      0xf30000c3      0x48fa1e0f
+```
+El tamaño predeterminado de una unidad simple es una unidad de cuatro bytes llamada `word`. El tamaño de las unidades de visualización del comando examinar se puede cambiar añadiendo una letra de tamaño al final de la letra de formato.
+
+| Letra | Tamaño        | Descripción                                 |
+|-------|---------------|---------------------------------------------|
+| b     | 1 byte        | Un byte simple                              |
+| h     | 2 bytes       | Media palabra (halfword)                    |
+| w     | 4 bytes       | Palabra (word)                              |
+| g     | 8 bytes       | Gigante (giant)                             |
+
+Esto es un poco confuso, ya que a veces el término `word` también se refiere a valores de 2 bytes. En este caso, una palabra doble o `DWORD` se refiere a un valor de 4 bytes. En este libro, tanto los `word` como los `DWORD` se refieren a valores de 4 bytes. Si me refiero a un valor de 2 bytes, lo llamaré palabra corta o media palabra. La siguiente salida de GDB muestra la memoria en varios tamaños.
+
+```
+(gdb) x/8xb $rip
+0x555555555141 <main+8>:        0xc7    0x45    0xfc    0x00    0x00    0x00    0x00    0xeb
+(gdb) x/8xh $rip
+0x555555555141 <main+8>:        0x45c7  0x00fc  0x0000  0xeb00  0x4813  0x058d  0x0eb3  0x0000
+(gdb) x/8xw $rip
+0x555555555141 <main+8>:        0x00fc45c7      0xeb000000      0x058d4813      0x00000eb3
+0x555555555151 <main+24>:       0xe8c78948      0xfffffed7      0x01fc4583      0x09fc7d83
 ```
 
 
