@@ -217,9 +217,9 @@ Para poder conseguir mas informacion al debugear, podemos compilar nuestro progr
 ```$ gcc -g 0x250.c```
 
 
-
+Una vez compilado podemos debugear nuestro programa. Primeramente listaremos el codigo de esta manera:
 ```
-$ gdb -q ./a.out
+ $ gdb -q ./a.out
 Reading symbols from ./a.out...
 (gdb) list
 1       #include <stdio.h>
@@ -232,6 +232,9 @@ Reading symbols from ./a.out...
 8               }
 9               return 0;
 10      }
+```
+Tambien podemos desensablar la funcion main para ver el contenido en lenguaje ensamblador. A esto se le podria llamar reversing estatico.
+```
 (gdb) disassemble main
 Dump of assembler code for function main:
    0x0000000000001139 <+0>:     push   %rbp
@@ -250,10 +253,57 @@ Dump of assembler code for function main:
    0x0000000000001169 <+48>:    ret
 End of assembler dump.
 ```
+Una vez hecho esto, haremos reversing de forma dinamica, es decir mientras ejecutamos el programa. Para esto primero ponemos como breakpoint la funciion main, esto detendra la ejecuccion justo al entrar en main. 
+
+Con el comando `run` el programa empieza a ejecutarse desde el principio y se para en el punto indicado, aqui, podrermos ver el contenido del punto en el que se ha detenido.
 ```
 (gdb) break main
 Breakpoint 1 at 0x1141: file 0x250.c, line 6.
 (gdb) run
-    Breakpoint 1, main () at 0x250.c:6
+Breakpoint 1, main () at 0x250.c:6
 6               for(i=0; i < 10; i++){
 ```
+En arquitectura 64 bits (como los PC actuales), `rip` (Punto de Instruccion) indica la procima instruccion que sera ejectuada. En caso de 32 bits (como indica el libro) seria `eip`.
+
+```
+(gdb) info register rip
+rip            0x555555555141      0x555555555141 <main+8>
+```
+Este resultado significa que el punto de memoria que se va a ejecutar es el siguiente:
+
+```
+0x0000000000001141 <+8>:     movl   $0x0,-0x4(%rbp)
+```
+Las instruccions anteriores a este punto de memoria, son conocidas colectivamenet como prologo de la funcion y son generadas por el compilador para configurar la memoria para el resto de las variables locales de la función main(). Parte de la razón por la que es necesario declarar variables en C es para facilitar la construcción de esta sección de código. El depurador sabe que esta parte del código se genera automáticamente y es lo suficientemente inteligente como para omitirla.
+
+Examinar la memoria es una habilidad fundamental para cualquier hacker. La mayoría de las vulnerabilidades de los hackers son como trucos de magia: parecen asombrosas y mágicas, a menos que se tenga experiencia con juegos de manos y distracciones. 
+
+Tanto en la magia como en el hacking, si se mira en el lugar correcto, el truco es obvio. Esa es una de las razones por las que un buen mago nunca repite el mismo truco. Pero con un depurador como GDB, cada aspecto de la ejecución de un programa puede examinarse de forma determinista, pausarse, recorrerse paso a paso y repetirse tantas veces como sea necesario. Dado que un programa en ejecución es básicamente un procesador y segmentos de memoria, examinar la memoria es la primera manera de ver qué está sucediendo realmente.
+
+
+El comando examinar en GDB puede usarse para examinar una dirección de memoria específica de diversas maneras. Este comando espera dos argumentos al usarse: la ubicación en la memoria que se examinará y cómo se mostrará esa memoria.
+
+El formato de visualización también utiliza una abreviatura de una sola letra, que opcionalmente puede ir precedida de un recuento de elementos a examinar. Algunas letras de formato comunes son las siguientes:
+
+| o     | Se muestra en octal.                   |
+| x     | Se muestra en hexadecimal.             |
+| u     | Se muestra en decimal sin signo (base 10). |
+| t     | Se muestra en binario.                 |
+
+Estos se pueden usar con el comando examinar para examinar una dirección de memoria específica. En el siguiente ejemplo, se utiliza la dirección actual del registro RIP. Los comandos abreviados se usan a menudo con GDB, e incluso el registro de información "rip" puede abreviarse simplemente como "i r rip".
+
+```
+(gdb) i r rip
+rip            0x555555555141      0x555555555141 <main+8>
+(gdb) x/o 0x555555555141
+0x555555555141 <main+8>:        077042707
+(gdb) x/x $rip
+0x555555555141 <main+8>:        0x00fc45c7
+(gdb) x/u $rip
+0x555555555141 <main+8>:        16532935
+(gdb) x/t $rip
+0x555555555141 <main+8>:        00000000111111000100010111000111
+(gdb)
+```
+
+
